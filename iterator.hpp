@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 17:42:01 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/05/25 17:10:10 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/05/27 17:12:02 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,6 @@ namespace	ft
 		{
 			return a._ptr - b._ptr;
 		}
-
 		template <class lhs, class rhs>
 		friend bool	operator==(const vector_iterator<lhs> &l, const vector_iterator<rhs> &r)
 		{

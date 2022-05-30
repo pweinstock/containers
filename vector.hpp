@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/06 15:49:34 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/05/25 17:01:57 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/05/27 18:09:43 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,20 @@ namespace	ft
 		}
 
 		template <class InputIterator>
-		vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename std::enable_if<!ft::is_integral<InputIterator>::value>::type * = NULL)
+		vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = NULL)
 		{
 			size_type	i = 0;
 			_alloc = alloc;
-			_capacity = last - first;
-			_size = _capacity,
+			//_capacity = last.base() - first.base();
+			_size = 0;
+			InputIterator temp = first;
+			while (temp != last)
+			{
+				++temp;
+				++_size;
+			}
+			_capacity = _size;
+			//_size = _capacity,
 			_initial_element = _alloc.allocate(_capacity);
 			for (InputIterator it = first; it != last; it++, i++)
 				_alloc.construct(_initial_element + i, *it);
@@ -254,24 +262,31 @@ namespace	ft
 		template <class InputIterator>
 		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0)
 		{
-			size_type	n = last - first;
+			//size_type	n = last - first;
+			size_type	n = 0;
+			InputIterator temp = first;
+			while (temp != last)
+			{
+				++temp;
+				++n;
+			}
 			if (n > _capacity)
 			{
 				this->clear();
 				_alloc.deallocate(_initial_element, _capacity);
 				_initial_element = _alloc.allocate(n);
-				for (size_type i = 0; i < n; i++)
-					_alloc.construct(_initial_element + i, *(first + i));
+				for (size_type i = 0; i < n; i++ , first++)
+					_alloc.construct(_initial_element + i, *(first /*+ i*/));
 				_capacity = n;
 			}
 			else
 			{
-				for (size_type i = 0; i < std::max(_size, n); i++)
+				for (size_type i = 0; i < std::max(_size, n); i++, first++)
 				{
 					if ( i < _size)
 						_alloc.destroy(_initial_element + i);
 					if (i < n)
-						_alloc.construct(_initial_element + i, *(first + i));
+						_alloc.construct(_initial_element + i, *(first /*+ i*/));
 				}
 			}
 			_size = n;
@@ -371,7 +386,14 @@ namespace	ft
 		void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = 0)
 		{
 			size_type	start = position - this->begin();
-			size_type	n = last - first;
+			size_type	n = 0;
+			InputIterator temp = first;
+				while (temp != last)
+				{
+					++temp;
+					++n;
+				}
+			//size_type	n = last - first;
 			if (_size + n > _capacity && _size + n < _capacity * 2)
 				this->reserve(_capacity * 2);
 			else

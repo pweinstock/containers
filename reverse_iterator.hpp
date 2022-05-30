@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 13:29:14 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/05/25 19:17:00 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/05/27 16:00:39 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,25 +128,25 @@ namespace	ft
 		template <class lhs, class rhs>
 		friend bool	operator<(const reverse_iterator<lhs> &l, const reverse_iterator<rhs> &r)
 		{
-			return l._it < r._it;
+			return l._it > r._it;
 		}
 
 		template <class lhs, class rhs>
 		friend bool	operator<=(const reverse_iterator<lhs> &l, const reverse_iterator<rhs> &r)
 		{
-			return l._it <= r._it;
+			return l._it >= r._it;
 		}
 
 		template <class lhs, class rhs>
 		friend bool	operator>(const reverse_iterator<lhs> &l, const reverse_iterator<rhs> &r)
 		{
-			return l._it > r._it;
+			return l._it < r._it;
 		}
 
 		template <class lhs, class rhs>
 		friend bool	operator>=(const reverse_iterator<lhs> &l, const reverse_iterator<rhs> &r)
 		{
-			return l._it >= r._it;
+			return l._it <= r._it;
 		}
 
 		private:
