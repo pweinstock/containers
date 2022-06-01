@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   binary_search_tree.hpp                             :+:      :+:    :+:   */
+/*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/30 15:50:18 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/01 15:12:24 by pweinsto         ###   ########.fr       */
+/*   Created: 2022/06/01 16:14:03 by pweinsto          #+#    #+#             */
+/*   Updated: 2022/06/01 18:09:52 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BINARY_SEARCH_TREE_HPP
-# define BINARY_SEARCH_TREE_HPP
+#ifndef MAP_H
+# define MAO_H
 
-# include <map>
+# include "pair.hpp"
+# include <memory>
+# include <functional>
 
-namespace ft
+namespace	ft
 {
-	class binary_search_tree
+	template < class Key, class T, class Compare = less<Key>, class Alloc = allocator<pair<const Key,T> > >
+	class map
 	{
+		typedef Key	key_type;
+		typedef T	mapped_type;
+		typedef pair<const key_type, mapped_type>	value_type;
+		typedef Compare	key_compare;
 		
-	}
+		
+	};
+	
 }
 
 # endif
