@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:29:25 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/01 17:12:15 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/04 14:10:05 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ namespace	ft
 		first_type	first;
 		second_type	second;
 	};
+
+	
 }
 
 # endif
