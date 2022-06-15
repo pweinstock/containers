@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.hpp                                           :+:      :+:    :+:   */
+/*   Node.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 12:03:23 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/04 12:59:35 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/15 13:47:42 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,18 @@ namespace ft
 	template<class T>
 	class Node
 	{
+		public:
 		typedef T	value_type;
 
 		value_type	value;
+		Node		*parent;
 		Node		*left;
 		Node		*right;
-		Node		*parents;
 
-		Node() : value(), left(nullptr), right(nullptr), parents(nullptr) {}
-		Node(Node *left, Node *right, Node *parents) : value(), left(left), right(right), parents(parents) {}
-		Node(value_type value, Node *left, Node *right, Node *parents) : value(value), left(left), right(right), parents(parents) {}
-		Node(Node &copy) : value(copy.value), left(copy.left), right(copy.right), parents(copy.parents) {}
+		Node() : value(), parent(nullptr) ,left(nullptr), right(nullptr) {}
+		Node(Node *parent = nullptr, Node *left = nullptr, Node *right = nullptr) : value(), parent(parent), left(left), right(right) {}
+		Node(value_type value, Node *parent = nullptr, Node *left = nullptr, Node *right = nullptr) : value(value), parent(parent), left(left), right(right) {}
+		//Node(Node &copy) : value(copy.value), parent(copy.parent), left(copy.left), right(copy.right) {}
 		~Node() {}
 		
 	};

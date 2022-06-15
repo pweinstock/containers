@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 17:42:01 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/05/27 17:12:02 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/15 18:52:13 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 namespace	ft
 {
-	//struct	random_access_iterator_tag {};
+	struct	random_access_iterator_tag {};
+	struct	bidirectional_iterator_tag {};
 
 	template <class Iterator/*class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&*/>
 	class vector_iterator
@@ -30,11 +31,11 @@ namespace	ft
 		// typedef Category	iterator_category;
 		public:
 		typedef Iterator													iterator_type;
-		typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
-		typedef typename iterator_traits<iterator_type>::value_type			value_type;
-		typedef typename iterator_traits<iterator_type>::difference_type	difference_type;
-		typedef typename iterator_traits<iterator_type>::pointer			pointer;
-		typedef typename iterator_traits<iterator_type>::reference			reference;
+		typedef typename ft::iterator_traits<iterator_type>::iterator_category	iterator_category;
+		typedef typename ft::iterator_traits<iterator_type>::value_type			value_type;
+		typedef typename ft::iterator_traits<iterator_type>::difference_type	difference_type;
+		typedef typename ft::iterator_traits<iterator_type>::pointer			pointer;
+		typedef typename ft::iterator_traits<iterator_type>::reference			reference;
 
 		vector_iterator() {}
 		vector_iterator(const vector_iterator &copy) : _ptr(copy._ptr) {}
@@ -165,6 +166,20 @@ namespace	ft
 		private:
 		iterator_type/*T*/	_ptr;
 	};
+	
+	template <class Iterator>
+	class bst_iterator
+	{
+		public:
+		typedef Iterator														iterator_type;
+		typedef typename ft::iterator_traits<iterator_type>::iterator_category	iterator_category;
+		typedef typename ft::iterator_traits<iterator_type>::value_type			value_type;
+		typedef typename ft::iterator_traits<iterator_type>::difference_type	difference_type;
+		typedef typename ft::iterator_traits<iterator_type>::pointer			pointer;
+		typedef typename ft::iterator_traits<iterator_type>::reference			reference;
+
+	}
+	
 	
 }
 

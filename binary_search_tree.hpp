@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:50:18 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/10 12:17:44 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/15 13:50:15 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@
 # include <map>
 # include "Node.hpp"
 # include "pair.hpp"
+//# include <iterator>	//just for testing
+#include "iterator.hpp"
 
 namespace ft
 {
-	template <class T, class Compare = std::less<typename T::first_type>, /*class Alloc = std::allocator<T>,*/ class Node = ft::Node<T>, class Node_alloc = std::allocator<Node> >
+	template <class T, class Compare = std::less<typename T::first_type>, /*class Alloc = std::allocator<T>,*/ class Node = ft::Node<T>, class Node_Alloc = std::allocator<Node> >
 	class Binary_search_tree
 	{
 		public:
@@ -27,8 +29,13 @@ namespace ft
 		typedef Node node_type;
 		typedef Node_Alloc node_alloc;
 		typedef Compare	key_compare;
-		typedef ft::bidirectional_iterator	iterator
-		typedef Alloc	allocator_type;
+		typedef typename node_alloc::pointer	pointer;
+		typedef typename node_alloc::const_pointer const_pointer;
+		typedef ft::vector_iterator<pointer>	iterator;
+		typedef ft::vector_iterator<const_pointer>	const_iterator;
+		// typedef std::iterator<std::bidirectional_iterator_tag, value_type>	iterator;		//just for testing
+		// typedef std::iterator<std::bidirectional_iterator_tag, value_type> const	const_iterator;	
+		//typedef Alloc	allocator_type;
 		
 		
 
@@ -94,9 +101,11 @@ namespace ft
 			_removeByKey(_last_node->parent, to_remove);
 		}
 		
+		node_type	*_last_node;
+		node_alloc	_node_alloc;
+		
 		private:
-
-
+		
 		node_type	*_BST_get_lower_node(node_type *root)				// iterates until the most left node
 		{
 			while (root != _last_node && root->left != _last_node)
@@ -121,22 +130,22 @@ namespace ft
 				if (node == node->parent->left)			//check if to_remove is a leftchild
 					node->parent->left = new_node;		//change to_removes parents leftchild to new_node
 				else
-					node->parent->right = new_node		//change to_removes parents rightchild to new_node
+					node->parent->right = new_node;		//change to_removes parents rightchild to new_node
 			}
 			else										// if to_remove is the root
 				_last_node->parent = new_node;			// update the root in _last_node->parent with new_node
 
-			_last_node->left = _BST_get_lower_node(_last_node->parent) //assign the lowest node to _last_node->left
-			_last_node->right = _BST_get_higher_node(_last_node->parent) //assign the highest node to _last_node->right
-			_last_node->value -= 1											//decrease the size of the BST by one
+			_last_node->left = _BST_get_lower_node(_last_node->parent); //assign the lowest node to _last_node->left
+			_last_node->right = _BST_get_higher_node(_last_node->parent); //assign the highest node to _last_node->right
+			_last_node->value -= 1;											//decrease the size of the BST by one
 
-			new_node->parent = node->parent			//change new_nodes parent to to_removes parent
+			new_node->parent = node->parent;			//change new_nodes parent to to_removes parent
 
 			_node_alloc.destroy(node);				//destroy to_remove
 			_node_alloc.deallocate(node, 1);		//deallocate to_remove
 		}
 
-		void	_replaceDoubleChildren(node_type &(*to_remove), node_type *new_node)
+		void	_replaceDoubleChildren(node_type to_remove, node_type *new_node)
 		{
 			if (new_node->parent != _last_node)				// check if the successor is not the root
 			{
@@ -177,8 +186,8 @@ namespace ft
 			_last_node->right = _BST_get_highest_node(_last_node->parent);		//get the highest node and assign it to _last_node->right
 			_last_node->value.first -= 1;										// decrease the size of the BST by one
 
-			node_alloc.destroy(to_remove);					//destroy to_remove
-			node_alloc.deallocate(to_remove, 1);			//deallocate to_remove
+			_node_alloc.destroy(to_remove);					//destroy to_remove
+			_node_alloc.deallocate(to_remove, 1);			//deallocate to_remove
 		}
 		
 
@@ -211,8 +220,7 @@ namespace ft
 		}
 
 		//node_type	*_root;
-		node_type	*_last_node;
-		node_alloc	_node_alloc;
+
 		//size_t	_size
 	};
 }
