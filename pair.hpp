@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:29:25 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/15 18:42:49 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/22 12:11:41 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,6 @@ namespace	ft
 	bool operator>= (const ft::pair<T1,T2>& lhs, const ft::pair<T1,T2>& rhs)
 	{
 		return !(lhs < rhs);
-	}
-
-	template <class T1, class T2>
-	ft::pair<T1,T2> make_pair(T1 x, T2 y)
-	{
-		return (ft::pair<T1, T2>(x, y));
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:50:18 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/15 13:50:15 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/24 16:43:29 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 # include "pair.hpp"
 //# include <iterator>	//just for testing
 #include "iterator.hpp"
+# include "less.hpp"
 
 namespace ft
 {
-	template <class T, class Compare = std::less<typename T::first_type>, /*class Alloc = std::allocator<T>,*/ class Node = ft::Node<T>, class Node_Alloc = std::allocator<Node> >
+	template <class T, class Compare = ft::less<typename T::first_type>, /*class Alloc = std::allocator<T>,*/ class Node = ft::Node<T>, class Node_Alloc = std::allocator<Node> >
 	class Binary_search_tree
 	{
 		public:
@@ -31,8 +32,14 @@ namespace ft
 		typedef Compare	key_compare;
 		typedef typename node_alloc::pointer	pointer;
 		typedef typename node_alloc::const_pointer const_pointer;
-		typedef ft::vector_iterator<pointer>	iterator;
-		typedef ft::vector_iterator<const_pointer>	const_iterator;
+		// typedef ft::bst_iterator<node_type, key_compare>	iterator;
+		// typedef ft::bst_iterator<node_type, key_compare>	const_iterator;
+		typedef ft::bst_iterator<bidirectional_iterator_tag, node_type, key_compare>	iterator;
+		typedef ft::bst_iterator<bidirectional_iterator_tag, node_type, key_compare>	const_iterator;
+
+
+
+		
 		// typedef std::iterator<std::bidirectional_iterator_tag, value_type>	iterator;		//just for testing
 		// typedef std::iterator<std::bidirectional_iterator_tag, value_type> const	const_iterator;	
 		//typedef Alloc	allocator_type;
@@ -119,6 +126,8 @@ namespace ft
 				root = root->right;
 				return root;
 		}
+
+		
 
 		void	_replaceNodeInParent(node_type *node, node_type *new_node)
 		{

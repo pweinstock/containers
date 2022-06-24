@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:14:03 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/15 13:53:23 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/24 16:37:07 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,22 +96,22 @@ namespace	ft
 
 		iterator	begin()
 		{
-			return iterator(_bst._last_node->left/*, _bst._last_node*/);
+			return iterator(_bst._last_node->left, _bst._last_node);
 		}
 
 		const_iterator	begin() const
 		{
-			return const_iterator(_bst._last_node->left/*, _bst._last_node*/);
+			return const_iterator(_bst._last_node->left, _bst._last_node);
 		}
 
 		iterator	end()
 		{
-			return iterator(_bst._last_node->right/*, _bst._last_node*/);
+			return iterator(_bst._last_node->right, _bst._last_node);
 		}
 
 		const_iterator	end() const
 		{
-			return const_iterator(_bst._last_node->right/*, _bst._last_node*/);
+			return const_iterator(_bst._last_node->right, _bst._last_node);
 		}
 
 		reverse_iterator rbegin()
