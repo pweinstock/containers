@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 12:03:23 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/15 13:47:42 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/28 15:54:08 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ namespace ft
 
 		Node() : value(), parent(nullptr) ,left(nullptr), right(nullptr) {}
 		Node(Node *parent = nullptr, Node *left = nullptr, Node *right = nullptr) : value(), parent(parent), left(left), right(right) {}
-		Node(value_type value, Node *parent = nullptr, Node *left = nullptr, Node *right = nullptr) : value(value), parent(parent), left(left), right(right) {}
+		Node(const value_type value, Node *parent = nullptr, Node *left = nullptr, Node *right = nullptr) : value(value), parent(parent), left(left), right(right) {}
 		//Node(Node &copy) : value(copy.value), parent(copy.parent), left(copy.left), right(copy.right) {}
 		~Node() {}
 		

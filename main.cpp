@@ -97,10 +97,53 @@
 
 //#include <map>
 #include "map.hpp"
+#include <map>
+#include <utility>
+#include <list>
+#define T1 float
+#define T2 int
+typedef ft::pair<const T1, T2> T3;
 
 int	main(void)
 {
-	ft::map<int, int>	mymap;
-	mymap.insert(ft::pair<int, int>(1, 42));
+	// std::map<int, int>	stdmap;
+	// ft::map<int, int>	mymap;
+	// stdmap.insert(std::pair<int, int>(1, 42));
+	// mymap.insert(ft::pair<int, int>(1, 42));
+	// std::cout << "mymap				stdmap" << std::endl;
+	
+	// std::cout << "[1]: " << mymap[1] << "				";
+	// std::cout << "[1]: " << stdmap[1] << std::endl;
+	
+	// mymap[2] = 43;
+	// stdmap[2] = 43;
+	// mymap[3] = 44;
+	// stdmap[3] = 44;
+	// mymap[4] = 45;
+	// stdmap[4] = 45;
+	// mymap[5] = 46;
+	// stdmap[5] = 46;
+	
+	// //std::cout << "rend(): " << (*(--mymap.rend())).second << "				";
+	// //std::cout << "rend(): " << (*(--stdmap.rend())).second << std::endl;
+	
+	// std::cout << "size(): " << mymap.size() << "			";
+	// std::cout << "size(): " << stdmap.size() << std::endl;
+
+	// ft::map<int, int>::iterator	it = mymap.begin(), ite = mymap.end();
+	// std::cout << "begin: " << it._ptr << std::endl;
+	// std::cout << "end: " << ite._ptr << std::endl;
+	// for (; it != ite; it++)
+	// 	std::cout << (*it).second << std::endl;
+
+	std::list<T3> lst;
+	unsigned int lst_size = 5;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(T3(2.5 + i, i + 1));
+
+	ft::map<T1, T2> mp(lst.begin(), lst.end());
+	std::cout << "test" << std::endl;
+	ft::map<T1, T2>::iterator it(mp.begin());
+	ft::map<T1, T2>::const_iterator ite(mp.begin());
 	return 0;
 }

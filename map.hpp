@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:14:03 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/24 16:37:07 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/07/02 16:59:17 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ namespace	ft
 		template <class InputIterator>
 		map	(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = NULL) : _alloc(alloc), _comp(comp), _bst()
 		{
-			this->inster(first, last);
+			this->insert(first, last);
 		}
 
 		map	(const map& x) : _alloc(x._alloc), _comp(x._comp), _bst()
@@ -106,12 +106,12 @@ namespace	ft
 
 		iterator	end()
 		{
-			return iterator(_bst._last_node->right, _bst._last_node);
+			return iterator(_bst._last_node, _bst._last_node);
 		}
 
 		const_iterator	end() const
 		{
-			return const_iterator(_bst._last_node->right, _bst._last_node);
+			return const_iterator(_bst._last_node, _bst._last_node);
 		}
 
 		reverse_iterator rbegin()
@@ -136,24 +136,34 @@ namespace	ft
 
 		bool empty() const
 		{
-			return (_bst._last_node->parent == _bst.last_node);
+			return (_bst._last_node->parent == _bst._last_node);
 		}
 
 		size_type size() const
 		{
-			return _bst._last_node->value.first;
+			//return _bst._last_node->value.second;
+			return _bst._size;
 		}
 
 		size_type max_size() const
 		{
-			return _bst.max_size();
+			return _bst._node_alloc.max_size();
 		}
 
 		mapped_type& operator[] (const key_type& k)
 		{
 			if (this->find(k) == this->end())
+			{
 				this->insert(ft::make_pair(k, mapped_type()));
-			return *(this->find(k)).second;
+			}
+			return (*(this->find(k))).second;
+			
+			//iterator tmp = this->find(k);
+
+			// if (tmp == this->end())
+			// 	this->insert(ft::make_pair(k, mapped_type()));
+			// tmp = this->find(k);
+			// return ((*tmp).second);
 		}
 
 		pair<iterator,bool> insert (const value_type& val)
@@ -171,7 +181,7 @@ namespace	ft
 		void insert (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type * = NULL)
 		{
 			//bool	is_valid;
-			difference_type	n = ft::distance(first - last);
+			difference_type	n = ft::distance(first, last);
 			while(n--)
 				this->insert(*(first++));
 		}

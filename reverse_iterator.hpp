@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 13:29:14 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/14 13:28:07 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/06/29 13:54:37 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ namespace	ft
 		reference	operator*() const
 		{
 			iterator_type	tmp = _it;
-			return *--tmp;
+			return *tmp;		// for vector maybe *--tmp;
 		}
 
 		pointer		operator->() const

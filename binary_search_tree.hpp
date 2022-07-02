@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:50:18 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/06/24 16:43:29 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/07/02 16:54:01 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 //# include <iterator>	//just for testing
 #include "iterator.hpp"
 # include "less.hpp"
+# include <iostream> //debugging
+# include <typeinfo>
 
 namespace ft
 {
@@ -35,7 +37,7 @@ namespace ft
 		// typedef ft::bst_iterator<node_type, key_compare>	iterator;
 		// typedef ft::bst_iterator<node_type, key_compare>	const_iterator;
 		typedef ft::bst_iterator<bidirectional_iterator_tag, node_type, key_compare>	iterator;
-		typedef ft::bst_iterator<bidirectional_iterator_tag, node_type, key_compare>	const_iterator;
+		typedef ft::bst_const_iterator<bidirectional_iterator_tag, node_type, key_compare>	const_iterator;
 
 
 
@@ -54,7 +56,10 @@ namespace ft
 		Binary_search_tree(const node_alloc& node_alloc_init = node_alloc()) : _node_alloc(node_alloc_init)
 		{
 			_last_node = _node_alloc.allocate(1);
+			// std::allocator<ft::Node<ft::pair<int, int> > >	test;
+			// _last_node = test.allocate(1);
 			_node_alloc.construct(_last_node, Node(_last_node, _last_node, _last_node));
+			_size = 0;
 		}
 		//Binary_search_tree(const key_compare &comp, const allocator_type &alloc) : size(), 
 
@@ -75,7 +80,7 @@ namespace ft
 			{
 				int	curkey = start_node->value.first; 		// just int as keys. needs to be fixed
 				if (curkey == to_insert.first) 				//check if a node with to_inserts key already excists
-					return ft::pair<iterator, bool>(iterator(start_node, _last_node), false); //return the iterator of the already excisting node and flase for insertion not valid (failure)
+					return ft::make_pair(iterator(start_node, _last_node), false); //return the iterator of the already excisting node and flase for insertion not valid (failure)
 				prev_node = start_node;						//save the current node as the previous node
 				if (to_insert.first > curkey)				//check if the to_inserts key is bigger than the current key
 				{
@@ -99,7 +104,8 @@ namespace ft
 
 				_last_node->left = _BST_get_lower_node(_last_node->parent); // update the lowest node in _last_node->left
 				_last_node->right = _BST_get_higher_node(_last_node->parent);// update the highest node in _last_node->right
-				_last_node->value.first += 1;				//increase the size of the BST by one
+				//_last_node->value.second += 1;				//increase the size of the BST by one
+				_size += 1;
 				return ft::pair<iterator, bool>(iterator(new_node, _last_node), true);	//return the iterator of the new_node and true for success
 		}
 
@@ -108,8 +114,27 @@ namespace ft
 			_removeByKey(_last_node->parent, to_remove);
 		}
 		
+ 
+
+		node_type	*searchByKey(value_type to_remove)
+		{
+			node_type	*node = _last_node->parent;
+
+			while (node != _last_node)
+			{
+				if (node->value.first == to_remove.first)
+					return (node);
+				if (node->value.first > to_remove.first)
+					node = node->left;
+				else
+					node = node->right;
+			}
+			return node;
+		}
+		
 		node_type	*_last_node;
 		node_alloc	_node_alloc;
+		size_t		_size;
 		
 		private:
 		
@@ -146,7 +171,9 @@ namespace ft
 
 			_last_node->left = _BST_get_lower_node(_last_node->parent); //assign the lowest node to _last_node->left
 			_last_node->right = _BST_get_higher_node(_last_node->parent); //assign the highest node to _last_node->right
-			_last_node->value -= 1;											//decrease the size of the BST by one
+			//_last_node->value.second -= 1;
+			_size -= 1;
+			//std::cout << "type: " << typeid(_last_node->value.second).name() << std::endl;										//decrease the size of the BST by one
 
 			new_node->parent = node->parent;			//change new_nodes parent to to_removes parent
 
@@ -154,7 +181,7 @@ namespace ft
 			_node_alloc.deallocate(node, 1);		//deallocate to_remove
 		}
 
-		void	_replaceDoubleChildren(node_type to_remove, node_type *new_node)
+		void	_replaceDoubleChildren(node_type *to_remove, node_type *new_node)
 		{
 			if (new_node->parent != _last_node)				// check if the successor is not the root
 			{
@@ -192,9 +219,9 @@ namespace ft
 			}
 
 			_last_node->left = _BST_get_lower_node(_last_node->parent);		//get the lowest node and assign it to _last_node->left
-			_last_node->right = _BST_get_highest_node(_last_node->parent);		//get the highest node and assign it to _last_node->right
-			_last_node->value.first -= 1;										// decrease the size of the BST by one
-
+			_last_node->right = _BST_get_higher_node(_last_node->parent);		//get the highest node and assign it to _last_node->right
+			//last_node->value.second -= 1;										// decrease the size of the BST by one
+			_size -= 1;
 			_node_alloc.destroy(to_remove);					//destroy to_remove
 			_node_alloc.deallocate(to_remove, 1);			//deallocate to_remove
 		}
