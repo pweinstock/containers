@@ -6,18 +6,19 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:50:18 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/07/02 16:54:01 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/07/08 16:40:29 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BINARY_SEARCH_TREE_HPP
-# define BINARY_SEARCH_TREE_HPP
+//#ifndef BINARY_SEARCH_TREE_HPP
+//# define BINARY_SEARCH_TREE_HPP
+#pragma once
 
 # include <map>
 # include "Node.hpp"
 # include "pair.hpp"
 //# include <iterator>	//just for testing
-#include "iterator.hpp"
+# include "iterator.hpp"
 # include "less.hpp"
 # include <iostream> //debugging
 # include <typeinfo>
@@ -36,7 +37,7 @@ namespace ft
 		typedef typename node_alloc::const_pointer const_pointer;
 		// typedef ft::bst_iterator<node_type, key_compare>	iterator;
 		// typedef ft::bst_iterator<node_type, key_compare>	const_iterator;
-		typedef ft::bst_iterator<bidirectional_iterator_tag, node_type, key_compare>	iterator;
+		typedef ft::bst_iterator<bidirectional_iterator_tag, node_type, key_compare>		iterator;
 		typedef ft::bst_const_iterator<bidirectional_iterator_tag, node_type, key_compare>	const_iterator;
 
 
@@ -69,6 +70,19 @@ namespace ft
 			_node_alloc.deallocate(_last_node, 1);
 		}
 
+		void swap(Binary_search_tree& x)
+		{
+			if (&x == this)
+				return ;
+			
+			node_type	*tmp = _last_node;
+			size_t		tmps = _size;
+			_last_node = x._last_node;
+			x._last_node = tmp;
+			_size = x._size;
+			x._size = tmps;
+		}
+
 		ft::pair<iterator, bool> insertPair(value_type to_insert)
 		{
 			Node	*new_node = _node_alloc.allocate(1);	//allocate the memory for to_insert
@@ -95,31 +109,28 @@ namespace ft
 			}
 			_node_alloc.construct(new_node, Node(to_insert, prev_node, _last_node, _last_node));//construct new_node with prev_node as parent and _last_node as it's childs
 
-				if (prev_node == _last_node)				//check if new_node is the root
-					_last_node->parent = new_node;			//update the root node in _last_node->parent
-				else if (side == true)						//check if new_node is a rightchild
-					prev_node->right = new_node;			//change the rightchild of new_nodes parent to new_node
-				else										//if new_node is a leftchild
-					prev_node->left = new_node;				//change the leftchild of new_nodes parent to new_node
+			if (prev_node == _last_node)				//check if new_node is the root
+				_last_node->parent = new_node;			//update the root node in _last_node->parent
+			else if (side == true)						//check if new_node is a rightchild
+				prev_node->right = new_node;			//change the rightchild of new_nodes parent to new_node
+			else										//if new_node is a leftchild
+				prev_node->left = new_node;				//change the leftchild of new_nodes parent to new_node
 
-				_last_node->left = _BST_get_lower_node(_last_node->parent); // update the lowest node in _last_node->left
-				_last_node->right = _BST_get_higher_node(_last_node->parent);// update the highest node in _last_node->right
-				//_last_node->value.second += 1;				//increase the size of the BST by one
-				_size += 1;
-				return ft::pair<iterator, bool>(iterator(new_node, _last_node), true);	//return the iterator of the new_node and true for success
+			_last_node->left = _BST_get_lower_node(_last_node->parent); // update the lowest node in _last_node->left
+			_last_node->right = _BST_get_higher_node(_last_node->parent);// update the highest node in _last_node->right
+			//_last_node->value.second += 1;				//increase the size of the BST by one
+			_size += 1;
+			return ft::pair<iterator, bool>(iterator(new_node, _last_node), true);	//return the iterator of the new_node and true for success
 		}
 
 		void	removeByKey(value_type to_remove)
 		{
 			_removeByKey(_last_node->parent, to_remove);
 		}
-		
- 
 
-		node_type	*searchByKey(value_type to_remove)
+		node_type	*searchByKey(value_type to_remove) const
 		{
 			node_type	*node = _last_node->parent;
-
 			while (node != _last_node)
 			{
 				if (node->value.first == to_remove.first)
@@ -175,7 +186,8 @@ namespace ft
 			_size -= 1;
 			//std::cout << "type: " << typeid(_last_node->value.second).name() << std::endl;										//decrease the size of the BST by one
 
-			new_node->parent = node->parent;			//change new_nodes parent to to_removes parent
+			if (new_node != _last_node)						//new_node is not _last_node
+				new_node->parent = node->parent;			//change new_nodes parent to to_removes parent
 
 			_node_alloc.destroy(node);				//destroy to_remove
 			_node_alloc.deallocate(node, 1);		//deallocate to_remove
@@ -229,6 +241,8 @@ namespace ft
 
 		void	_removeByKey(Node *node, value_type to_remove)
 		{
+			// std::cout << "to_remove: " << to_remove.first << std::endl;
+			// std::cout << "node: " << node->value.first << std::endl;
 			if (to_remove.first < node->value.first)			// recursive call to find the node to remove
 			{
 				_removeByKey(node->left, to_remove);
@@ -252,7 +266,10 @@ namespace ft
 			else if (node->right != _last_node)		//if node has a rightchild but not a leftchild
 				_replaceNodeInParent(node, node->right);	//replace the t-remove node with the successor node
 			else									//if node is a leafnode
+			{
 				_replaceNodeInParent(node, _last_node);	// remove to_remove
+			}
+				
 		}
 
 		//node_type	*_root;
@@ -261,4 +278,4 @@ namespace ft
 	};
 }
 
-# endif
+//# endif

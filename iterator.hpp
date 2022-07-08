@@ -6,12 +6,13 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 17:42:01 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/07/02 19:10:43 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/07/08 16:40:46 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ITERATOR_HPP
-# define ITERATOR_HPP
+//#ifndef ITERATOR_HPP
+//# define ITERATOR_HPP
+# pragma once
 
 # include "iterator_traits.hpp"
 # include "binary_search_tree.hpp"
@@ -207,8 +208,10 @@ namespace	ft
 		//bst_iterator(iterator_type *ptr, iterator_type *last_node) : _ptr(ptr), _last_node(last_node) {}
 		bst_iterator(iterator_type *ptr, iterator_type *last_node)
 		{
+			//std::cout << "construction last_node: " << last_node << std::endl;
 			this->_ptr = ptr;
 			this->_last_node = last_node;
+			//std::cout << "construction_last_node: " << this->_last_node << std::endl;
 		}
 		// template <typename iter>
 		// bst_iterator(const bst_iterator<iterator_category, iter, key_compare>& i, iterator_type *last_node): _ptr(i.base()), _last_node(last_node) {}
@@ -233,18 +236,29 @@ namespace	ft
 		bst_iterator	&operator=(const bst_iterator &copy)
 		{
 			this->_ptr = copy._ptr;
+			this->_last_node = copy._last_node;
 			return *this;
 		}
 
-		template <class lhs, class rhs>
-		friend bool	operator==(const bst_iterator<iterator_category, lhs, key_compare> &l, const bst_iterator<iterator_category, rhs, key_compare> &r)
+		// template <class lhs, class rhs>
+		// friend bool	operator==(const bst_iterator<iterator_category, lhs, key_compare> &l, const bst_iterator<iterator_category, rhs, key_compare> &r)
+		// {
+		// 	return l._ptr == r._ptr;
+		// }
+		// template <class lhs, class rhs>
+		// friend bool	operator!=(const bst_iterator<iterator_category, lhs, key_compare> &l, const bst_iterator<iterator_category, rhs, key_compare> &r)
+		// {
+		// 	return l._ptr != r._ptr;
+		// }
+
+		bool	operator==(const bst_iterator &rhs)
 		{
-			return l._ptr == r._ptr;
+			return _ptr == rhs._ptr;
 		}
-		template <class lhs, class rhs>
-		friend bool	operator!=(const bst_iterator<iterator_category, lhs, key_compare> &l, const bst_iterator<iterator_category, rhs, key_compare> &r)
+
+		bool	operator!=(const bst_iterator &rhs)
 		{
-			return l._ptr != r._ptr;
+			return _ptr != rhs._ptr;
 		}
 
 		reference	operator*() const
@@ -258,6 +272,8 @@ namespace	ft
 
 		bst_iterator	&operator++()
 		{
+			//std::cout << "key: " << this->_ptr->value.first << std::endl;
+			
 			if (this->_ptr->right != this->_last_node) // if it doesn't point to a leaf node
 			{
 				this->_ptr =_BST_get_lower_node(this->_ptr->right);
@@ -267,7 +283,8 @@ namespace	ft
 			{
 				//key_type key = _ptr->value.first;
 				iterator_type	*tmp = this->_ptr->parent;
-				while (tmp != this->_last_node && _key_comp(tmp->value.first, this->_ptr->value.first))
+				//while (tmp != this->_last_node && _key_comp(tmp->value.first, this->_ptr->value.first))
+				while (tmp != this->_last_node && (tmp->value.first < this->_ptr->value.first))
 					tmp = tmp->parent;
 				if (tmp != this->_last_node)
 				{
@@ -276,6 +293,7 @@ namespace	ft
 				}
 			}
 				this->_ptr = this->_last_node;			//this->_last_node->right;
+				//std::cout << "key after: " << this->_ptr->value.first << std::endl;
 				return *this;
 		}
 
@@ -288,9 +306,15 @@ namespace	ft
 
 		bst_iterator	&operator--()
 		{
-			if (_ptr == _last_node->right) // if it points to the highest node
+			// if (_ptr == _last_node->right) // if it points to the highest node
+			// {
+			// 	_ptr = _ptr->parent;
+			// 	std::cout << "this0 : " << _ptr->value.first << std::endl;
+			// 	return *this;
+			// }
+			if (_ptr == _last_node)
 			{
-				_ptr = _ptr->parent;
+				_ptr = _ptr->right;
 				return *this;
 			}
 			else if (_ptr->left != _last_node)
@@ -302,7 +326,8 @@ namespace	ft
 			{
 				//key_type key = _ptr->value.first;
 				iterator_type	*tmp = _ptr->parent;
-				while (tmp != _last_node && _key_comp(_ptr->value.first, tmp->value.first))
+				//while (tmp != _last_node && _key_comp(_ptr->value.first, tmp->value.first))
+				while (tmp != _last_node && (_ptr->value.first < tmp->value.first))
 					tmp = tmp->parent;
 				if (tmp != _last_node)
 				{
@@ -357,7 +382,7 @@ namespace	ft
 		// typedef typename ft::iterator_traits<iterator_type>::pointer			pointer;
 		// typedef typename ft::iterator_traits<iterator_type>::reference			reference;
 		typedef T									iterator_type; // node_type
-		typedef typename T::value_type				value_type;
+		typedef typename T::value_type				const value_type;
 		//typedef typename not_const_T::Node			Node;
 		//typedef typename T::key_type				key_type;
 		//typedef typename T::mapped_type				mapped_type;
@@ -392,8 +417,8 @@ namespace	ft
 		}
 		// template <typename iter>
 		// bst_iterator(const bst_iterator<iterator_category, iter, key_compare>& i, iterator_type *last_node): _ptr(i.base()), _last_node(last_node) {}
-		template <typename iter>
-		bst_const_iterator(const bst_iterator<iterator_category, iter, key_compare>& i, iterator_type *last_node)
+		//template <typename iter>
+		bst_const_iterator(const bst_iterator<iterator_category, T, key_compare>& i, iterator_type *last_node)
 		{
 			this->_ptr = i._ptr;			//i.base();
 			this->_last_node = last_node;
@@ -416,15 +441,25 @@ namespace	ft
 			return *this;
 		}
 
-		template <class lhs, class rhs>
-		friend bool	operator==(const bst_const_iterator<iterator_category, lhs, key_compare> &l, const bst_const_iterator<iterator_category, rhs, key_compare> &r)
+		// template <class lhs, class rhs>
+		// friend bool	operator==(const bst_const_iterator<iterator_category, lhs, key_compare> &l, const bst_const_iterator<iterator_category, rhs, key_compare> &r)
+		// {
+		// 	return l._ptr == r._ptr;
+		// }
+		// template <class lhs, class rhs>
+		// friend bool	operator!=(const bst_const_iterator<iterator_category, lhs, key_compare> &l, const bst_const_iterator<iterator_category, rhs, key_compare> &r)
+		// {
+		// 	return l._ptr != r._ptr;
+		// }
+
+		bool	operator==(const bst_const_iterator &rhs)
 		{
-			return l._ptr == r._ptr;
+			return _ptr == rhs._ptr;
 		}
-		template <class lhs, class rhs>
-		friend bool	operator!=(const bst_const_iterator<iterator_category, lhs, key_compare> &l, const bst_const_iterator<iterator_category, rhs, key_compare> &r)
+
+		bool	operator!=(const bst_const_iterator &rhs)
 		{
-			return l._ptr != r._ptr;
+			return _ptr != rhs._ptr;
 		}
 
 		reference	operator*() const
@@ -447,7 +482,8 @@ namespace	ft
 			{
 				//key_type key = _ptr->value.first;
 				iterator_type	*tmp = this->_ptr->parent;
-				while (tmp != this->_last_node && _key_comp(tmp->value.first, this->_ptr->value.first))
+				//while (tmp != this->_last_node && _key_comp(tmp->value.first, this->_ptr->value.first))
+				while (tmp != this->_last_node && (tmp->value.first < this->_ptr->value.first))
 					tmp = tmp->parent;
 				if (tmp != this->_last_node)
 				{
@@ -468,9 +504,14 @@ namespace	ft
 
 		bst_const_iterator	&operator--()
 		{
-			if (_ptr == _last_node->right)
+			// if (_ptr == _last_node->right)
+			// {
+			// 	_ptr = _ptr->parent;
+			// 	return *this;
+			// }
+			if (_ptr == _last_node)
 			{
-				_ptr = _ptr->parent;
+				_ptr = _ptr->right;
 				return *this;
 			}
 			else if (_ptr->left != _last_node)
@@ -482,7 +523,7 @@ namespace	ft
 			{
 				//key_type key = _ptr->value.first;
 				iterator_type	*tmp = _ptr->parent;
-				while (tmp != _last_node && _key_comp(_ptr->value.first, tmp->value.first))
+				while (tmp != _last_node && (_ptr->value.first < tmp->value.first))
 					tmp = tmp->parent;
 				if (tmp != _last_node)
 				{
@@ -525,4 +566,4 @@ namespace	ft
 	
 }
 
-# endif
+//# endif

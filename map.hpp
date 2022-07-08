@@ -6,7 +6,7 @@
 /*   By: pweinsto <pweinsto@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 16:14:03 by pweinsto          #+#    #+#             */
-/*   Updated: 2022/07/02 16:59:17 by pweinsto         ###   ########.fr       */
+/*   Updated: 2022/07/08 13:34:25 by pweinsto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include "binary_search_tree.hpp"
 # include "reverse_iterator.hpp"
 # include "distance.hpp"
+# include "lexicographical_compare.hpp"
 
 namespace	ft
 {
@@ -87,8 +88,14 @@ namespace	ft
 
 		map&	operator= (const map& x)
 		{
+			//typedef typename ft::Binary_search_tree<value_type, key_compare>::node_type	Node;
 			if(&x == this)
 				return *this;
+			// _bst._node_alloc.destroy(_bst._last_node);
+			// _bst._node_alloc.deallocate(_bst._last_node, 1);
+			//_node_alloc.construct(_last_node, Node(x._bst._last_node.parent, x._bst._last_node.left, x._bst._last_node.right));
+			// _bst._last_node = _bst._node_alloc.allocate(1);
+			// _bst._node_alloc.construct(_bst._last_node, Node(_bst._last_node, _bst._last_node, _bst._last_node));
 			this->clear();
 			this->insert(x.begin(), x.end());
 			return *this;
@@ -193,10 +200,11 @@ namespace	ft
 
 		size_type erase (const key_type& k)
 		{
+			
 			if (this->find(k) == this->end())
 				return 0;
 			_bst.removeByKey(ft::make_pair(k, mapped_type()));
-			return(1);
+			return (1);
 		}
 
 		void erase (iterator first, iterator last)
@@ -240,30 +248,61 @@ namespace	ft
 			const_iterator	begin = this->begin();
 			const_iterator	end = this->end();
 			while (begin != end)
-				if (*(begin++).first == k)
+				if ((*(begin++)).first == k)
 					return 1;
 			return 0;
 		}
 
 		iterator lower_bound (const key_type& k)
 		{
-			const_iterator	begin = this->begin();
-			const_iterator	end = this->end();
+			iterator	begin = this->begin();
+			iterator	end = this->end();
 			while (begin != end)
 			{
-				if (_comp(*(begin()).first, k) == false)
+				if (_comp((*begin).first, k) == false)
 					break;
 				begin++;
 			}
 			return begin;
 		}
 
+		// const_iterator lower_bound (const key_type& k) const
+		// {
+		// 	return const_iterator(this->lower_bound(k));
+		// }
+
 		const_iterator lower_bound (const key_type& k) const
 		{
-			return const_iterator(this->lower_bound(k));
+			const_iterator	begin = this->begin();
+			const_iterator	end = this->end();
+			while (begin != end)
+			{
+				if (_comp((*begin).first, k) == false)
+					break;
+				begin++;
+			}
+			return begin;
 		}
 
 		iterator upper_bound (const key_type& k)
+		{
+			iterator	begin = this->begin();
+			iterator	end = this->end();
+			while (begin != end)
+			{
+				if (_comp(k, (*begin).first))
+					break;
+				begin++;
+			}
+			return begin;
+		}
+
+		// const_iterator upper_bound (const key_type& k) const
+		// {
+		// 	return const_iterator(this->upper_bound(k));
+		// }
+
+		const_iterator upper_bound (const key_type& k) const
 		{
 			const_iterator	begin = this->begin();
 			const_iterator	end = this->end();
@@ -274,11 +313,6 @@ namespace	ft
 				begin++;
 			}
 			return begin;
-		}
-
-		const_iterator upper_bound (const key_type& k) const
-		{
-			return const_iterator(this->upper_bound(k));
 		}
 
 		pair<const_iterator,const_iterator> equal_range (const key_type& k) const
@@ -298,6 +332,41 @@ namespace	ft
 		Binary_search_tree<value_type, Compare>	_bst;
 	};
 	
+	template < class Key, class T, class Compare, class Alloc >
+	bool operator==(const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs)
+	{
+		return ((lhs.size() == rhs.size()) && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+	
+	template < class Key, class T, class Compare, class Alloc >
+	bool operator!=(const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs)
+	{
+		return (!(lhs == rhs));
+	}
+	
+	template < class Key, class T, class Compare, class Alloc >
+	bool operator<(const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+	
+	template < class Key, class T, class Compare, class Alloc >
+	bool operator<=(const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs)
+	{
+		return (!(rhs < lhs));
+	}
+	
+	template < class Key, class T, class Compare, class Alloc >
+	bool operator>(const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs)
+	{
+		return (rhs < lhs);
+	}
+	
+	template < class Key, class T, class Compare, class Alloc >
+	bool operator>=(const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs)
+	{
+		return (!(lhs < rhs));
+	}
 }
 
 # endif
